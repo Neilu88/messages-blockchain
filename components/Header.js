@@ -6,7 +6,7 @@ import { ethers } from "ethers"
 import Message from "../components/Message.js"
 
 const Header = () => {
-  const [currentAccount, setCurrentAccount] = useState("")
+  const [currentAccount, setCurrentAccount] = useState(null)
   const connectWallet = async () => {
     try {
       const { ethereum } = window
@@ -20,6 +20,8 @@ const Header = () => {
 
       console.log("Connected", accounts[0])
       setCurrentAccount(accounts[0])
+      getTotalMessages()
+      getAllMessages()
     } catch (error) {
       console.log(error)
     }
@@ -45,6 +47,8 @@ const Header = () => {
         const account = accounts[0]
         console.log("Found an authorized account:", account)
         setCurrentAccount(account)
+        getTotalMessages()
+        getAllMessages()
       } else {
         console.log("No authorized account found")
       }
@@ -202,11 +206,13 @@ const Header = () => {
             Send Message
           </button>
         </form>
-        <h1 className="rounded-lg border border-black p-2 text-3xl font-bold">
-          Total Messages: {totalMessages - 5}
-        </h1>
+        {currentAccount && (
+          <h1 className="rounded-lg border border-black p-2 text-3xl font-bold">
+            Total Messages: {totalMessages - 5}
+          </h1>
+        )}
       </div>
-      {}
+
       {allMessages.reverse().map(({ message, timestamp, address }) => (
         <Message sender={address} message={message} timestamp={timestamp} />
       ))}
